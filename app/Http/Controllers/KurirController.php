@@ -19,15 +19,34 @@ class KurirController extends Controller
      */
     public function index()
     {
-        $response = $this->apiService->getKurir();
+        try {
+            $response = $this->apiService->getKurir();
 
-        if (!$response['success']) {
-            return view('kurir.index')->with('error', $response['message']);
+            // Cek apakah response valid
+            if (!$response || !is_array($response)) {
+                return view('kurir.index', [
+                    'error' => 'Tidak dapat terhubung ke API',
+                    'kurir' => []
+                ]);
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return view('kurir.index', [
+                    'error' => $response['message'] ?? 'Gagal mengambil data kurir',
+                    'kurir' => []
+                ]);
+            }
+
+            return view('kurir.index', [
+                'kurir' => $response['data'] ?? []
+            ]);
+
+        } catch (\Exception $e) {
+            return view('kurir.index', [
+                'error' => 'Error: ' . $e->getMessage(),
+                'kurir' => []
+            ]);
         }
-
-        return view('kurir.index', [
-            'kurir' => $response['data']
-        ]);
     }
 
     /**
@@ -56,18 +75,28 @@ class KurirController extends Controller
             'password.min' => 'Password minimal 6 karakter',
         ]);
 
-        $response = $this->apiService->createKurir([
-            'name' => $request->name,
-            'username' => $request->username,
-            'password' => $request->password,
-            'phone' => $request->phone,
-        ]);
+        try {
+            $response = $this->apiService->createKurir([
+                'name' => $request->name,
+                'username' => $request->username,
+                'password' => $request->password,
+                'phone' => $request->phone,
+            ]);
 
-        if (!$response['success']) {
-            return back()->withInput()->with('error', $response['message']);
+            // Cek response
+            if (!$response || !is_array($response)) {
+                return back()->withInput()->with('error', 'Tidak dapat terhubung ke API');
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return back()->withInput()->with('error', $response['message'] ?? 'Gagal menambahkan kurir');
+            }
+
+            return redirect()->route('kurir.index')->with('success', 'Kurir berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
         }
-
-        return redirect()->route('kurir.index')->with('success', 'Kurir berhasil ditambahkan');
     }
 
     /**
@@ -75,15 +104,24 @@ class KurirController extends Controller
      */
     public function edit($id)
     {
-        $response = $this->apiService->getKurir($id);
+        try {
+            $response = $this->apiService->getKurir($id);
 
-        if (!$response['success']) {
-            return redirect()->route('kurir.index')->with('error', $response['message']);
+            if (!$response || !is_array($response)) {
+                return redirect()->route('kurir.index')->with('error', 'Tidak dapat terhubung ke API');
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return redirect()->route('kurir.index')->with('error', $response['message'] ?? 'Kurir tidak ditemukan');
+            }
+
+            return view('kurir.edit', [
+                'kurir' => $response['data']
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect()->route('kurir.index')->with('error', 'Error: ' . $e->getMessage());
         }
-
-        return view('kurir.edit', [
-            'kurir' => $response['data']
-        ]);
     }
 
     /**
@@ -97,24 +135,33 @@ class KurirController extends Controller
             'password' => 'nullable|string|min:6',
         ]);
 
-        $data = [
-            'id' => $id,
-            'name' => $request->name,
-            'phone' => $request->phone,
-        ];
+        try {
+            $data = [
+                'id' => $id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+            ];
 
-        // Hanya update password jika diisi
-        if ($request->filled('password')) {
-            $data['password'] = $request->password;
+            // Hanya update password jika diisi
+            if ($request->filled('password')) {
+                $data['password'] = $request->password;
+            }
+
+            $response = $this->apiService->updateKurir($data);
+
+            if (!$response || !is_array($response)) {
+                return back()->withInput()->with('error', 'Tidak dapat terhubung ke API');
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return back()->withInput()->with('error', $response['message'] ?? 'Gagal mengupdate kurir');
+            }
+
+            return redirect()->route('kurir.index')->with('success', 'Data kurir berhasil diupdate');
+
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
         }
-
-        $response = $this->apiService->updateKurir($data);
-
-        if (!$response['success']) {
-            return back()->withInput()->with('error', $response['message']);
-        }
-
-        return redirect()->route('kurir.index')->with('success', 'Data kurir berhasil diupdate');
     }
 
     /**
@@ -122,12 +169,21 @@ class KurirController extends Controller
      */
     public function destroy($id)
     {
-        $response = $this->apiService->deleteKurir($id);
+        try {
+            $response = $this->apiService->deleteKurir($id);
 
-        if (!$response['success']) {
-            return back()->with('error', $response['message']);
+            if (!$response || !is_array($response)) {
+                return back()->with('error', 'Tidak dapat terhubung ke API');
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return back()->with('error', $response['message'] ?? 'Gagal menghapus kurir');
+            }
+
+            return redirect()->route('kurir.index')->with('success', 'Kurir berhasil dihapus');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error: ' . $e->getMessage());
         }
-
-        return redirect()->route('kurir.index')->with('success', 'Kurir berhasil dihapus');
     }
 }

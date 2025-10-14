@@ -19,13 +19,33 @@ class LaporanController extends Controller
      */
     public function overview()
     {
-        $response = $this->apiService->getLaporan('overview');
+        try {
+            $response = $this->apiService->getLaporan('overview');
 
-        if (!$response['success']) {
-            return view('laporan.overview')->with('error', $response['message']);
+            if (!$response || !is_array($response)) {
+                return view('laporan.overview', [
+                    'error' => 'Tidak dapat terhubung ke API',
+                    'data' => []
+                ]);
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return view('laporan.overview', [
+                    'error' => $response['message'] ?? 'Gagal mengambil data',
+                    'data' => []
+                ]);
+            }
+
+            return view('laporan.overview', [
+                'data' => $response['data'] ?? []
+            ]);
+
+        } catch (\Exception $e) {
+            return view('laporan.overview', [
+                'error' => 'Error: ' . $e->getMessage(),
+                'data' => []
+            ]);
         }
-
-        return view('laporan.overview', ['data' => $response['data']]);
     }
 
     /**
@@ -33,13 +53,33 @@ class LaporanController extends Controller
      */
     public function stok()
     {
-        $response = $this->apiService->getLaporan('stok');
+        try {
+            $response = $this->apiService->getLaporan('stok');
 
-        if (!$response['success']) {
-            return view('laporan.stok')->with('error', $response['message']);
+            if (!$response || !is_array($response)) {
+                return view('laporan.stok', [
+                    'error' => 'Tidak dapat terhubung ke API',
+                    'produk' => []
+                ]);
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return view('laporan.stok', [
+                    'error' => $response['message'] ?? 'Gagal mengambil data',
+                    'produk' => []
+                ]);
+            }
+
+            return view('laporan.stok', [
+                'produk' => $response['data'] ?? []
+            ]);
+
+        } catch (\Exception $e) {
+            return view('laporan.stok', [
+                'error' => 'Error: ' . $e->getMessage(),
+                'produk' => []
+            ]);
         }
-
-        return view('laporan.stok', ['produk' => $response['data']]);
     }
 
     /**
@@ -50,20 +90,66 @@ class LaporanController extends Controller
         $tanggal_dari = $request->input('tanggal_dari', date('Y-m-01'));
         $tanggal_sampai = $request->input('tanggal_sampai', date('Y-m-d'));
 
-        $response = $this->apiService->getLaporan('transaksi', [
-            'tanggal_dari' => $tanggal_dari,
-            'tanggal_sampai' => $tanggal_sampai,
-        ]);
+        try {
+            $response = $this->apiService->getLaporan('transaksi', [
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
 
-        if (!$response['success']) {
-            return view('laporan.transaksi')->with('error', $response['message']);
+            if (!$response || !is_array($response)) {
+                return view('laporan.transaksi', [
+                    'error' => 'Tidak dapat terhubung ke API',
+                    'data' => [
+                        'detail' => [],
+                        'summary' => [
+                            'total_transaksi' => 0,
+                            'total_pendapatan' => 0,
+                            'transaksi_selesai' => 0,
+                            'transaksi_dibatalkan' => 0
+                        ]
+                    ],
+                    'tanggal_dari' => $tanggal_dari,
+                    'tanggal_sampai' => $tanggal_sampai,
+                ]);
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return view('laporan.transaksi', [
+                    'error' => $response['message'] ?? 'Gagal mengambil data',
+                    'data' => [
+                        'detail' => [],
+                        'summary' => [
+                            'total_transaksi' => 0,
+                            'total_pendapatan' => 0,
+                            'transaksi_selesai' => 0,
+                            'transaksi_dibatalkan' => 0
+                        ]
+                    ],
+                    'tanggal_dari' => $tanggal_dari,
+                    'tanggal_sampai' => $tanggal_sampai,
+                ]);
+            }
+
+            return view('laporan.transaksi', [
+                'data' => $response['data'] ?? [
+                    'detail' => [],
+                    'summary' => []
+                ],
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
+
+        } catch (\Exception $e) {
+            return view('laporan.transaksi', [
+                'error' => 'Error: ' . $e->getMessage(),
+                'data' => [
+                    'detail' => [],
+                    'summary' => []
+                ],
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
         }
-
-        return view('laporan.transaksi', [
-            'data' => $response['data'],
-            'tanggal_dari' => $tanggal_dari,
-            'tanggal_sampai' => $tanggal_sampai,
-        ]);
     }
 
     /**
@@ -74,19 +160,59 @@ class LaporanController extends Controller
         $tanggal_dari = $request->input('tanggal_dari', date('Y-m-01'));
         $tanggal_sampai = $request->input('tanggal_sampai', date('Y-m-d'));
 
-        $response = $this->apiService->getLaporan('kurir', [
-            'tanggal_dari' => $tanggal_dari,
-            'tanggal_sampai' => $tanggal_sampai,
-        ]);
+        try {
+            $response = $this->apiService->getLaporan('kurir', [
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
 
-        if (!$response['success']) {
-            return view('laporan.kurir')->with('error', $response['message']);
+            // Debug: Uncomment line ini untuk lihat response structure
+            // dd($response);
+
+            if (!$response || !is_array($response)) {
+                return view('laporan.kurir', [
+                    'error' => 'Tidak dapat terhubung ke API',
+                    'kurir' => [],
+                    'tanggal_dari' => $tanggal_dari,
+                    'tanggal_sampai' => $tanggal_sampai,
+                ]);
+            }
+
+            if (!isset($response['success']) || !$response['success']) {
+                return view('laporan.kurir', [
+                    'error' => $response['message'] ?? 'Gagal mengambil data',
+                    'kurir' => [],
+                    'tanggal_dari' => $tanggal_dari,
+                    'tanggal_sampai' => $tanggal_sampai,
+                ]);
+            }
+
+            // Ambil data kurir dari response
+            // Cek struktur response: bisa $response['data'] atau $response['data']['data']
+            $kurirData = [];
+            if (isset($response['data'])) {
+                // Jika response['data'] adalah array dengan key 'data' lagi
+                if (is_array($response['data']) && isset($response['data']['data'])) {
+                    $kurirData = $response['data']['data'];
+                } else {
+                    // Jika response['data'] langsung array kurir
+                    $kurirData = $response['data'];
+                }
+            }
+
+            return view('laporan.kurir', [
+                'kurir' => $kurirData,
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
+
+        } catch (\Exception $e) {
+            return view('laporan.kurir', [
+                'error' => 'Error: ' . $e->getMessage(),
+                'kurir' => [],
+                'tanggal_dari' => $tanggal_dari,
+                'tanggal_sampai' => $tanggal_sampai,
+            ]);
         }
-
-        return view('laporan.kurir', [
-            'kurir' => $response['data'],
-            'tanggal_dari' => $tanggal_dari,
-            'tanggal_sampai' => $tanggal_sampai,
-        ]);
     }
 }

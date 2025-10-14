@@ -64,21 +64,21 @@
                         <th class="text-center" width="10%">Diproses</th>
                         <th class="text-center" width="10%">Dikirim</th>
                         <th class="text-center" width="10%">Selesai</th>
-                        <th class="text-end" width="15%">Nilai Pesanan</th>
+                        <th class="text-end pe-4" width="15%">Nilai Pesanan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($kurir as $index => $k)
                     <tr>
                         <td class="ps-4">
-                            @if($index == 0)
+                            @if($index === 0)
                             <i class="bi bi-trophy-fill text-warning fs-4"></i>
-                            @elseif($index == 1)
+                            @elseif($index === 1)
                             <i class="bi bi-trophy-fill text-secondary fs-5"></i>
-                            @elseif($index == 2)
+                            @elseif($index === 2)
                             <i class="bi bi-trophy-fill text-danger fs-6"></i>
                             @else
-                            <span class="fs-5">{{ $index + 1 }}</span>
+                            <span class="fs-5">{{ $loop->iteration }}</span>
                             @endif
                         </td>
                         <td>
@@ -106,7 +106,7 @@
                         <td class="text-center">
                             <span class="badge bg-success fs-6">{{ $k['pesanan_selesai'] }}</span>
                         </td>
-                        <td class="text-end">
+                        <td class="text-end pe-4">
                             <strong class="text-success">
                                 Rp {{ number_format($k['total_nilai_pesanan'], 0, ',', '.') }}
                             </strong>
@@ -118,20 +118,58 @@
                     <tr>
                         <td colspan="3" class="ps-4"><strong>TOTAL</strong></td>
                         <td class="text-center">
-                            <strong>{{ array_sum(array_column($kurir, 'total_pesanan')) }}</strong>
+                            <strong>
+                                @php
+                                    $totalPesanan = 0;
+                                    foreach($kurir as $k) {
+                                        $totalPesanan += (int)$k['total_pesanan'];
+                                    }
+                                    echo $totalPesanan;
+                                @endphp
+                            </strong>
                         </td>
                         <td class="text-center">
-                            <strong>{{ array_sum(array_column($kurir, 'pesanan_diproses')) }}</strong>
+                            <strong>
+                                @php
+                                    $totalDiproses = 0;
+                                    foreach($kurir as $k) {
+                                        $totalDiproses += (int)$k['pesanan_diproses'];
+                                    }
+                                    echo $totalDiproses;
+                                @endphp
+                            </strong>
                         </td>
                         <td class="text-center">
-                            <strong>{{ array_sum(array_column($kurir, 'pesanan_dikirim')) }}</strong>
+                            <strong>
+                                @php
+                                    $totalDikirim = 0;
+                                    foreach($kurir as $k) {
+                                        $totalDikirim += (int)$k['pesanan_dikirim'];
+                                    }
+                                    echo $totalDikirim;
+                                @endphp
+                            </strong>
                         </td>
                         <td class="text-center">
-                            <strong>{{ array_sum(array_column($kurir, 'pesanan_selesai')) }}</strong>
+                            <strong>
+                                @php
+                                    $totalSelesai = 0;
+                                    foreach($kurir as $k) {
+                                        $totalSelesai += (int)$k['pesanan_selesai'];
+                                    }
+                                    echo $totalSelesai;
+                                @endphp
+                            </strong>
                         </td>
-                        <td class="text-end">
+                        <td class="text-end pe-4">
                             <strong class="text-success">
-                                Rp {{ number_format(array_sum(array_column($kurir, 'total_nilai_pesanan')), 0, ',', '.') }}
+                                @php
+                                    $totalNilai = 0;
+                                    foreach($kurir as $k) {
+                                        $totalNilai += (float)$k['total_nilai_pesanan'];
+                                    }
+                                    echo 'Rp ' . number_format($totalNilai, 0, ',', '.');
+                                @endphp
                             </strong>
                         </td>
                     </tr>
@@ -148,7 +186,7 @@
 </div>
 
 <!-- Performance Chart (Optional) -->
-@if(isset($kurir) && count($kurir) > 0)
+@if(isset($kurir) && count($kurir) > 0 && count($kurir) >= 1)
 <div class="row mt-4">
     <div class="col-md-6">
         <div class="card border-0 shadow-sm">
@@ -159,7 +197,13 @@
                 </h6>
             </div>
             <div class="card-body">
-                @foreach(array_slice($kurir, 0, 5) as $index => $k)
+                @php
+                    $topKurir = array_slice($kurir, 0, 5);
+                    $maxSelesai = isset($kurir[0]) && isset($kurir[0]['pesanan_selesai']) ? (int)$kurir[0]['pesanan_selesai'] : 1;
+                    if ($maxSelesai === 0) $maxSelesai = 1; // Prevent division by zero
+                @endphp
+                
+                @foreach($topKurir as $k)
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1">
                         <small><strong>{{ $k['name'] }}</strong></small>
@@ -167,8 +211,8 @@
                     </div>
                     <div class="progress" style="height: 20px;">
                         @php
-                            $max = $kurir[0]['pesanan_selesai'] ?? 1;
-                            $percentage = ($k['pesanan_selesai'] / max($max, 1)) * 100;
+                            $current = (int)$k['pesanan_selesai'];
+                            $percentage = ($current / $maxSelesai) * 100;
                         @endphp
                         <div class="progress-bar bg-success" 
                              role="progressbar" 

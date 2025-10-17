@@ -17,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Database Configuration Class
 class Database {
-    private $host = "localhost";
-    private $db_name = "db_gas_galon";
-    private $username = "root";
-    private $password = "";
+    private $host = "sql211.infinityfree.com";
+    private $db_name = "if0_40187104_gasgolon";
+    private $username = "if0_40187104";
+    private $password = "QAqyXZvCWdi9mc";
     public $conn;
 
     // Get database connection

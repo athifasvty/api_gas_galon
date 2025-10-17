@@ -21,6 +21,7 @@ class Database {
     private $db_name = "db_gas_galon";
     private $username = "root";
     private $password = "";
+    public $conn;
 
     // Get database connection
     public function getConnection() {

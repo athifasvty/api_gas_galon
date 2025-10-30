@@ -1,14 +1,8 @@
 <?php
 /**
- * Login Endpoint
+ * Login Endpoint - FINAL VERSION
  * Method: POST
  * Endpoint: /api/auth/login.php
- * 
- * Body (JSON):
- * {
- *   "username": "admin",
- *   "password": "123456"
- * }
  */
 
 require_once '../../config/database.php';
@@ -22,11 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendResponse(false, "Method not allowed. Use POST");
 }
 
-// Get JSON input
-$data = getJsonInput();
+// Get input data
+$data = getInputData();
 
-// Validate required fields
-validateRequired($data, ['username', 'password']);
+// Validasi required fields
+if (!isset($data->username) || empty($data->username)) {
+    sendResponse(false, "Username harus diisi");
+}
+
+if (!isset($data->password) || empty($data->password)) {
+    sendResponse(false, "Password harus diisi");
+}
 
 $username = trim($data->username);
 $password = $data->password;
@@ -72,9 +72,6 @@ try {
 
     // Generate token
     $token = generateToken($user['id'], $user['username'], $user['role']);
-
-    // Optional: Log login activity
-    // logActivity($conn, $user['id'], 'login', 'User logged in');
 
     // Prepare user data (remove password)
     $userData = [

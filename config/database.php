@@ -197,17 +197,32 @@ function verifyPassword($password, $hash) {
 }
 
 /**
- * Get JSON input data
+ * Get input data - MULTI METHOD SUPPORT
  */
-function getJsonInput() {
-    $json = file_get_contents("php://input");
-    $data = json_decode($json);
+function getInputData() {
+    $data = null;
     
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        sendResponse(false, "Invalid JSON format");
+    // Method 1: JSON dari php://input
+    $raw = @file_get_contents("php://input");
+    if (!empty($raw)) {
+        $data = @json_decode($raw);
+        if ($data !== null) {
+            return $data;
+        }
     }
     
-    return $data;
+    // Method 2: Dari $_POST
+    if (!empty($_POST)) {
+        return (object)$_POST;
+    }
+    
+    // Method 3: Dari $_REQUEST
+    if (!empty($_REQUEST)) {
+        return (object)$_REQUEST;
+    }
+    
+    // Kalau semua gagal
+    sendResponse(false, "No input data received");
 }
 
 /**

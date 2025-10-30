@@ -1,20 +1,8 @@
 <?php
 /**
- * Register Endpoint
+ * Register Endpoint - FINAL VERSION
  * Method: POST
  * Endpoint: /api/auth/register.php
- * 
- * Body (JSON):
- * {
- *   "name": "John Doe",
- *   "username": "johndoe",
- *   "password": "123456",
- *   "phone": "081234567890",
- *   "address": "Jl. Raya No. 123"
- * }
- * 
- * Note: Register ini hanya untuk customer
- * Admin dan Kurir dibuat melalui admin panel
  */
 
 require_once '../../config/database.php';
@@ -28,11 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendResponse(false, "Method not allowed. Use POST");
 }
 
-// Get JSON input
-$data = getJsonInput();
+// Get input data (support JSON dan form-data)
+$data = getInputData();
 
-// Validate required fields
-validateRequired($data, ['name', 'username', 'password']);
+// Validasi required fields
+if (!isset($data->name) || empty($data->name)) {
+    sendResponse(false, "Nama harus diisi");
+}
+
+if (!isset($data->username) || empty($data->username)) {
+    sendResponse(false, "Username harus diisi");
+}
+
+if (!isset($data->password) || empty($data->password)) {
+    sendResponse(false, "Password harus diisi");
+}
 
 $name = trim($data->name);
 $username = trim($data->username);
@@ -111,9 +109,6 @@ try {
 
     // Generate token
     $token = generateToken($user_id, $username, 'customer');
-
-    // Optional: Log registration
-    // logActivity($conn, $user_id, 'register', 'New user registered');
 
     // Prepare user data
     $userData = [

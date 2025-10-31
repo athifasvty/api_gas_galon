@@ -67,6 +67,46 @@ function sendResponse($success, $message, $data = null) {
 }
 
 /**
+ * Get JSON Input from Request Body
+ * 👇 FUNCTION BARU INI YANG DITAMBAHKAN!
+ */
+function getJsonInput() {
+    // Try to get raw input
+    $input = @file_get_contents('php://input');
+    
+    // If empty, try alternative methods
+    if (empty($input)) {
+        // Try $_POST first
+        if (!empty($_POST)) {
+            return (object)$_POST;
+        }
+        
+        // Try $_REQUEST
+        if (!empty($_REQUEST)) {
+            return (object)$_REQUEST;
+        }
+        
+        // If all failed
+        sendResponse(false, 'No input data received');
+    }
+    
+    // Decode JSON
+    $data = json_decode($input);
+    
+    // Check for JSON errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        sendResponse(false, 'Invalid JSON format: ' . json_last_error_msg());
+    }
+    
+    // Check if data is null or empty
+    if ($data === null) {
+        sendResponse(false, 'Empty request body');
+    }
+    
+    return $data;
+}
+
+/**
  * Get authorization token from request header
  */
 function getAuthToken() {
@@ -198,31 +238,10 @@ function verifyPassword($password, $hash) {
 
 /**
  * Get input data - MULTI METHOD SUPPORT
+ * 👇 FUNCTION INI SEKARANG MEMANGGIL getJsonInput()
  */
 function getInputData() {
-    $data = null;
-    
-    // Method 1: JSON dari php://input
-    $raw = @file_get_contents("php://input");
-    if (!empty($raw)) {
-        $data = @json_decode($raw);
-        if ($data !== null) {
-            return $data;
-        }
-    }
-    
-    // Method 2: Dari $_POST
-    if (!empty($_POST)) {
-        return (object)$_POST;
-    }
-    
-    // Method 3: Dari $_REQUEST
-    if (!empty($_REQUEST)) {
-        return (object)$_REQUEST;
-    }
-    
-    // Kalau semua gagal
-    sendResponse(false, "No input data received");
+    return getJsonInput();
 }
 
 /**

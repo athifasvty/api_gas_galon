@@ -68,24 +68,30 @@ if ($method === 'GET') {
                     dp.id,
                     dp.id_produk,
                     dp.jumlah,
-                    dp.harga as harga_satuan,
+                    dp.subtotal,
                     pr.nama_produk,
                     pr.jenis,
-                    (dp.jumlah * dp.harga) as subtotal
+                    pr.harga as harga_satuan,
+                    dp.subtotal as subtotal
                 FROM detail_pesanan dp
                 JOIN produk pr ON dp.id_produk = pr.id
                 WHERE dp.id_pesanan = ?
             ");
             $stmt_detail->execute([$item['id']]);
-            $item['items'] = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
+            $items = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
             
             // Format items
-            foreach ($item['items'] as &$detail) {
-                $detail['id'] = (int)$detail['id'];
-                $detail['id_produk'] = (int)$detail['id_produk'];
-                $detail['jumlah'] = (int)$detail['jumlah'];
-                $detail['harga_satuan'] = (float)$detail['harga_satuan'];
-                $detail['subtotal'] = (float)$detail['subtotal'];
+            $item['items'] = [];
+            foreach ($items as $detail) {
+                $item['items'][] = [
+                    'id' => (int)$detail['id'],
+                    'id_produk' => (int)$detail['id_produk'],
+                    'jumlah' => (int)$detail['jumlah'],
+                    'nama_produk' => $detail['nama_produk'],
+                    'jenis' => $detail['jenis'],
+                    'harga_satuan' => (float)$detail['harga_satuan'],
+                    'subtotal' => (float)$detail['subtotal']
+                ];
             }
         }
         
@@ -162,22 +168,22 @@ if ($method === 'POST') {
         
         // Insert detail pesanan dan kurangi stok
         foreach ($items_detail as $detail) {
-            // Insert detail
-            $stmt = $conn->prepare("
-                INSERT INTO detail_pesanan (id_pesanan, id_produk, jumlah, harga) 
-                VALUES (?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $id_pesanan,
-                $detail['id_produk'],
-                $detail['jumlah'],
-                $detail['harga']
-            ]);
-            
-            // Kurangi stok
-            $stmt = $conn->prepare("UPDATE produk SET stok = stok - ? WHERE id = ?");
-            $stmt->execute([$detail['jumlah'], $detail['id_produk']]);
-        }
+    // Insert detail
+    $stmt = $conn->prepare("
+        INSERT INTO detail_pesanan (id_pesanan, id_produk, jumlah, subtotal) 
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $id_pesanan,
+        $detail['id_produk'],
+        $detail['jumlah'],
+        $detail['harga'] * $detail['jumlah'] // Simpan subtotal, bukan harga satuan
+    ]);
+    
+    // Kurangi stok
+    $stmt = $conn->prepare("UPDATE produk SET stok = stok - ? WHERE id = ?");
+    $stmt->execute([$detail['jumlah'], $detail['id_produk']]);
+}
         
         // Insert pembayaran
         $stmt = $conn->prepare("

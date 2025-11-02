@@ -46,14 +46,15 @@ try {
         $where[] = "p.status IN ('selesai', 'dibatalkan')";
     }
     
-    // Limit
+    // Limit - LANGSUNG DIMASUKKAN KE QUERY (bukan parameter)
     $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 50;
     if ($limit > 100) $limit = 100; // Max 100
+    if ($limit < 1) $limit = 50; // Min 1
     
     $where_sql = implode(" AND ", $where);
     
-    // Query riwayat
-    $stmt = $conn->prepare("
+    // Query riwayat - LIMIT langsung di query string
+    $query = "
         SELECT 
             p.id,
             p.tanggal_pesan,
@@ -72,11 +73,11 @@ try {
         WHERE $where_sql
         GROUP BY p.id
         ORDER BY p.tanggal_pesan DESC
-        LIMIT ?
-    ");
+        LIMIT $limit
+    ";
     
-    $params[] = $limit;
-    $stmt->execute($params);
+    $stmt = $conn->prepare($query);
+    $stmt->execute($params); // JANGAN tambahkan $limit di sini
     $riwayat = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Format data dan ambil detail items
@@ -91,24 +92,29 @@ try {
                 dp.id,
                 dp.id_produk,
                 dp.jumlah,
-                dp.harga as harga_satuan,
+                dp.subtotal,
                 pr.nama_produk,
                 pr.jenis,
-                (dp.jumlah * dp.harga) as subtotal
+                pr.harga as harga_satuan
             FROM detail_pesanan dp
             JOIN produk pr ON dp.id_produk = pr.id
             WHERE dp.id_pesanan = ?
         ");
         $stmt_detail->execute([$item['id']]);
-        $item['items'] = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
+        $items = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
         
         // Format items
-        foreach ($item['items'] as &$detail) {
-            $detail['id'] = (int)$detail['id'];
-            $detail['id_produk'] = (int)$detail['id_produk'];
-            $detail['jumlah'] = (int)$detail['jumlah'];
-            $detail['harga_satuan'] = (float)$detail['harga_satuan'];
-            $detail['subtotal'] = (float)$detail['subtotal'];
+        $item['items'] = [];
+        foreach ($items as $detail) {
+            $item['items'][] = [
+                'id' => (int)$detail['id'],
+                'id_produk' => (int)$detail['id_produk'],
+                'jumlah' => (int)$detail['jumlah'],
+                'nama_produk' => $detail['nama_produk'],
+                'jenis' => $detail['jenis'],
+                'harga_satuan' => (float)$detail['harga_satuan'],
+                'subtotal' => (float)$detail['subtotal']
+            ];
         }
     }
     

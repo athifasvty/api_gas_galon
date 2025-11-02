@@ -61,29 +61,34 @@ try {
         $pesanan['total_harga'] = (float)$pesanan['total_harga'];
         
         // Ambil detail items
-        $stmt = $conn->prepare("
+        $stmt_detail = $conn->prepare("
             SELECT 
                 dp.id,
                 dp.id_produk,
                 dp.jumlah,
-                dp.harga as harga_satuan,
+                dp.subtotal,
                 pr.nama_produk,
                 pr.jenis,
-                (dp.jumlah * dp.harga) as subtotal
+                pr.harga as harga_satuan
             FROM detail_pesanan dp
             JOIN produk pr ON dp.id_produk = pr.id
             WHERE dp.id_pesanan = ?
         ");
-        $stmt->execute([$_GET['id']]);
-        $pesanan['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt_detail->execute([$_GET['id']]);
+        $items = $stmt_detail->fetchAll(PDO::FETCH_ASSOC);
         
         // Format items
-        foreach ($pesanan['items'] as &$item) {
-            $item['id'] = (int)$item['id'];
-            $item['id_produk'] = (int)$item['id_produk'];
-            $item['jumlah'] = (int)$item['jumlah'];
-            $item['harga_satuan'] = (float)$item['harga_satuan'];
-            $item['subtotal'] = (float)$item['subtotal'];
+        $pesanan['items'] = [];
+        foreach ($items as $detail) {
+            $pesanan['items'][] = [
+                'id' => (int)$detail['id'],
+                'id_produk' => (int)$detail['id_produk'],
+                'jumlah' => (int)$detail['jumlah'],
+                'nama_produk' => $detail['nama_produk'],
+                'jenis' => $detail['jenis'],
+                'harga_satuan' => (float)$detail['harga_satuan'],
+                'subtotal' => (float)$detail['subtotal']
+            ];
         }
         
         sendResponse(true, "Detail pesanan", $pesanan);
@@ -107,7 +112,7 @@ try {
     
     $where_sql = implode(" AND ", $where);
     
-    $stmt = $conn->prepare("
+    $query = "
         SELECT 
             p.id,
             p.tanggal_pesan,
@@ -126,7 +131,9 @@ try {
         WHERE $where_sql
         GROUP BY p.id
         ORDER BY p.tanggal_pesan ASC
-    ");
+    ";
+    
+    $stmt = $conn->prepare($query);
     $stmt->execute($params);
     $pesanan_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
     

@@ -100,15 +100,17 @@ try {
     
     // Filter status
     if (isset($_GET['status']) && !empty($_GET['status'])) {
-        if (!in_array($_GET['status'], ['diproses', 'dikirim'])) {
-            sendResponse(false, "Status harus 'diproses' atau 'dikirim'");
-        }
-        $where[] = "p.status = ?";
-        $params[] = $_GET['status'];
-    } else {
-        // Default: tampilkan diproses dan dikirim saja
-        $where[] = "p.status IN ('diproses', 'dikirim')";
+    // ✅ PENTING: Harus ada 'selesai' di array
+    if (!in_array($_GET['status'], ['diproses', 'dikirim', 'selesai'])) {
+        sendResponse(false, "Status harus 'diproses', 'dikirim', atau 'selesai'");
     }
+    $where[] = "p.status = ?";
+    $params[] = $_GET['status'];
+} else {
+    // Default: tampilkan diproses dan dikirim saja
+    $where[] = "p.status IN ('diproses', 'dikirim')";
+}
+
     
     $where_sql = implode(" AND ", $where);
     

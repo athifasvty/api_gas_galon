@@ -189,7 +189,7 @@ body {
 
 /* ===== MOBILE RESPONSIVE ===== */
 .sidebar-overlay {
-    display: none;
+    display: none !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -209,7 +209,7 @@ body {
     }
 
     .sidebar-overlay.show {
-        display: block;
+        display: block !important;
     }
 
     .main-content {

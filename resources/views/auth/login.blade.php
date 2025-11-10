@@ -4,206 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login - Gas Galon Admin</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <title>Login - Hydragas Admin</title>
     
     <style>
-        :root {
-            --primary-color: #3498db;
-            --danger-color: #e74c3c;
-            --dark-bg: #2c3e50;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-image: url('{{ asset('images/background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(100, 100, 100, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1;
         }
 
         .login-container {
+            position: relative;
+            z-index: 2;
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             padding: 0 20px;
         }
 
         .login-card {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
-        .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            color: white;
+            background: #ffffff;
+            border-radius: 40px 40px 40px 140px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 50px;
+            position: relative;
         }
 
         .login-logo {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            backdrop-filter: blur(10px);
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .login-logo i {
-            font-size: 2.5rem;
+        .login-logo img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
         }
 
-        .login-header h4 {
-            margin-bottom: 0.25rem;
+        .login-title {
+            text-align: center;
+            font-size: 24px;
             font-weight: 600;
-        }
-
-        .login-header p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .login-body {
-            padding: 2.5rem 2rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control {
-            padding: 0.75rem 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15);
-        }
-
-        .input-group-text {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-right: none;
-            color: #6c757d;
-        }
-
-        .input-group .form-control {
-            border-left: none;
-        }
-
-        .input-group:focus-within .input-group-text {
-            border-color: var(--primary-color);
-        }
-
-        .btn-login {
-            padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
-        .form-check-label {
-            font-size: 0.9rem;
-            color: #6c757d;
+            color: #333;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
         }
 
         .alert {
-            border-radius: 0.5rem;
-            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
         .alert-danger {
-            background: #fee;
-            color: var(--danger-color);
+            background-color: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
         }
 
         .alert-success {
-            background: #d4edda;
+            background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        .login-footer {
-            text-align: center;
-            padding: 1.5rem 2rem;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
+        .form-group {
+            margin-bottom: 25px;
         }
 
-        .login-footer p {
-            margin: 0;
-            color: #6c757d;
-            font-size: 0.85rem;
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 15px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+            color: #666;
         }
 
-        /* Loading Animation */
-        .btn-login .spinner-border {
-            width: 1rem;
-            height: 1rem;
-            border-width: 2px;
+        .form-control::placeholder {
+            color: #999;
         }
 
-        /* Password Toggle */
-        .password-toggle {
+        .form-control:focus {
+            background: #ebebeb;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             cursor: pointer;
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            z-index: 10;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .password-toggle:hover {
-            color: var(--primary-color);
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #357abd 0%, #2868a8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
         @media (max-width: 576px) {
-            .login-header {
-                padding: 2rem 1.5rem;
+            .login-card {
+                padding: 50px 30px;
+                border-radius: 30px 30px 30px 100px;
             }
 
-            .login-body {
-                padding: 2rem 1.5rem;
+            .login-logo img {
+                width: 100px;
             }
 
-            .login-logo {
-                width: 60px;
-                height: 60px;
-            }
-
-            .login-logo i {
-                font-size: 2rem;
+            .login-title {
+                font-size: 20px;
             }
         }
     </style>
@@ -211,170 +185,84 @@
 <body>
     <div class="login-container">
         <div class="login-card">
-            <!-- Header -->
-            <div class="login-header">
-                <div class="login-logo">
-                    <i class="bi bi-fire"></i>
-                </div>
-                <h4>Gas Galon System</h4>
-                <p>Admin Panel Login</p>
+            <!-- Logo -->
+            <div class="login-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Hydragas Logo">
             </div>
 
-            <!-- Body -->
-            <div class="login-body">
-                <!-- Alert Messages -->
-                @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle me-2"></i>
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                @endif
+            <!-- Title -->
+            <h1 class="login-title">LOGIN</h1>
 
-                @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                @endif
-
-                @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    @foreach($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                @endif
-
-                <!-- Login Form -->
-                <form action="{{ route('login.post') }}" method="POST" id="loginForm">
-                    @csrf
-
-                    <!-- Username -->
-                    <div class="mb-3">
-                        <label for="username" class="form-label">
-                            <i class="bi bi-person me-1"></i> Username
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-person"></i>
-                            </span>
-                            <input type="text" 
-                                   class="form-control @error('username') is-invalid @enderror" 
-                                   id="username" 
-                                   name="username" 
-                                   placeholder="Masukkan username"
-                                   value="{{ old('username') }}"
-                                   required
-                                   autofocus>
-                        </div>
-                        @error('username')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <!-- Password -->
-                    <div class="mb-3">
-                        <label for="password" class="form-label">
-                            <i class="bi bi-lock me-1"></i> Password
-                        </label>
-                        <div class="input-group position-relative">
-                            <span class="input-group-text">
-                                <i class="bi bi-lock"></i>
-                            </span>
-                            <input type="password" 
-                                   class="form-control @error('password') is-invalid @enderror" 
-                                   id="password" 
-                                   name="password" 
-                                   placeholder="Masukkan password"
-                                   required>
-                            <span class="password-toggle" onclick="togglePassword()">
-                                <i class="bi bi-eye" id="toggleIcon"></i>
-                            </span>
-                        </div>
-                        @error('password')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <!-- Remember Me -->
-                    <div class="mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                            <label class="form-check-label" for="remember">
-                                Ingat saya
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-login" id="btnLogin">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                            Login
-                        </button>
-                    </div>
-                </form>
+            <!-- Alert Messages -->
+            @if(session('success'))
+            <div class="alert alert-success" id="alertSuccess">
+                {{ session('success') }}
             </div>
+            @endif
 
-            <!-- Footer -->
-            <div class="login-footer">
-                <p>
-                    <i class="bi bi-shield-check me-1"></i>
-                    Secure Connection &copy; {{ date('Y') }} Gas Galon System
-                </p>
+            @if(session('error'))
+            <div class="alert alert-danger" id="alertError">
+                {{ session('error') }}
             </div>
-        </div>
+            @endif
 
-        <!-- Info Card -->
-        <div class="text-center mt-4">
-            <div class="card" style="background: rgba(255, 255, 255, 0.95); border: none;">
-                <div class="card-body py-3">
-                    <small class="text-muted">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Demo Login: <strong>admin</strong> / <strong>123456</strong>
-                    </small>
+            @if($errors->any())
+            <div class="alert alert-danger" id="alertErrors">
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+            @endif
+
+            <!-- Login Form -->
+            <form action="{{ route('login.post') }}" method="POST" id="loginForm">
+                @csrf
+
+                <!-- Username -->
+                <div class="form-group">
+                    <input type="text" 
+                           class="form-control" 
+                           id="username" 
+                           name="username" 
+                           placeholder="Username"
+                           value="{{ old('username') }}"
+                           required
+                           autofocus>
                 </div>
-            </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <input type="password" 
+                           class="form-control" 
+                           id="password" 
+                           name="password" 
+                           placeholder="Password"
+                           required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    Submit
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Toggle Password Visibility
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('bi-eye');
-                toggleIcon.classList.add('bi-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('bi-eye-slash');
-                toggleIcon.classList.add('bi-eye');
-            }
-        }
-
         // Form Submit Loading
         document.getElementById('loginForm').addEventListener('submit', function() {
-            const btn = document.getElementById('btnLogin');
+            const btn = document.getElementById('btnSubmit');
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Logging in...';
+            btn.innerHTML = '<span class="spinner"></span>Loading...';
         });
 
-        // Auto-hide alerts
+        // Auto-hide alerts after 5 seconds
         setTimeout(function() {
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
             });
         }, 5000);
     </script>

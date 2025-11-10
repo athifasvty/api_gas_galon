@@ -138,6 +138,19 @@ class ApiService
             'body' => $body
         ]);
 
+        // Jika response null, kembalikan error yang informatif
+        if (is_null($body)) {
+            Log::error('API returned null response', [
+                'status' => $statusCode,
+                'raw_body' => $response->body()
+            ]);
+            
+            return [
+                'success' => false,
+                'message' => 'API backend tidak merespons dengan benar. Pastikan API backend sudah berjalan.'
+            ];
+        }
+
         // Return response body
         return $body;
     }

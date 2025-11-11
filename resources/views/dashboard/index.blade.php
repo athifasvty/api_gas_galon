@@ -105,60 +105,86 @@
     </div>
 </div>
 
-<!-- Produk Terlaris -->
-@if(isset($produk_terlaris) && count($produk_terlaris) > 0)
+<!-- Pesanan Section -->
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white">
-                <h5 class="mb-0">
-                    <i class="bi bi-trophy text-warning me-2"></i>
-                    Produk Terlaris Bulan Ini
+                <h5 class="mb-3">
+                    <i class="bi bi-cart-check text-primary me-2"></i>
+                    Daftar Pesanan
                 </h5>
+                <!-- Tabs for Order Status -->
+                <ul class="nav nav-pills" id="orderTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="baru-tab" data-bs-toggle="tab" data-bs-target="#pesanan-baru" type="button" role="tab">
+                            Pesanan Baru
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="proses-tab" data-bs-toggle="tab" data-bs-target="#dalam-pengantaran" type="button" role="tab">
+                            Dalam Pengantaran
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="selesai-tab" data-bs-toggle="tab" data-bs-target="#selesai" type="button" role="tab">
+                            Selesai
+                        </button>
+                    </li>
+                </ul>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nama Produk</th>
-                                <th>Total Terjual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($produk_terlaris as $index => $produk)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>
-                                    <i class="bi bi-box-seam text-primary me-2"></i>
-                                    {{ $produk['nama_produk'] }}
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">{{ $produk['total_terjual'] }} pcs</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="tab-content" id="orderTabsContent">
+                    <!-- Pesanan Baru -->
+                    <div class="tab-pane fade show active" id="pesanan-baru" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID Order</th>
+                                        <th>Nama Pelanggan</th>
+                                        <th>No. Telepon</th>
+                                        <th>Alamat</th>
+                                        <th>Kurir</th>
+                                        <th>Total</th>
+                                        <th>Tanggal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ORD-001</td>
+                                        <td>Sinuh</td>
+                                        <td>081345789</td>
+                                        <td>Ciracas, Jakarta Timur</td>
+                                        <td>Kurir A</td>
+                                        <td>Rp. 21.000</td>
+                                        <td>28/10/2025</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Dalam Pengantaran -->
+                    <div class="tab-pane fade" id="dalam-pengantaran" role="tabpanel">
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mb-0 mt-2">Tidak ada pesanan dalam pengantaran</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Selesai -->
+                    <div class="tab-pane fade" id="selesai" role="tabpanel">
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mb-0 mt-2">Belum ada pesanan selesai</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@else
-<div class="row">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body text-center py-5">
-                <i class="bi bi-inbox display-4 text-muted"></i>
-                <h5 class="mt-3">Belum Ada Data Produk Terlaris</h5>
-                <p class="text-muted">Data akan muncul setelah ada transaksi</p>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
 <!-- Quick Actions -->
 <div class="row mt-4">

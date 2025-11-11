@@ -4,14 +4,31 @@
 @section('page-title', 'Laporan Overview')
 
 @section('content')
-<!-- Header -->
+<!-- Page Title -->
 <div class="mb-4">
-    <h4 class="mb-1">
-        <i class="bi bi-graph-up text-primary me-2"></i>
-        Dashboard Laporan
-    </h4>
-    <p class="text-muted mb-0">Ringkasan statistik dan performa bisnis</p>
+    <h4 class="fw-bold">Laporan Overview</h4>
 </div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="laporanTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+            Laporan Overview
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.stok') }}">Laporan Stok</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.kurir') }}">Performa Kurir</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="laporanTabsContent">
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
 
 <!-- Statistics Cards Row 1 -->
 <div class="row g-3 mb-4">
@@ -204,6 +221,9 @@
                 @endif
             </div>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 

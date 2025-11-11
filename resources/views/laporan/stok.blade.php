@@ -4,22 +4,31 @@
 @section('page-title', 'Laporan Stok')
 
 @section('content')
-<!-- Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="mb-1">
-            <i class="bi bi-boxes text-primary me-2"></i>
-            Laporan Stok Produk
-        </h4>
-        <p class="text-muted mb-0">Monitor ketersediaan stok semua produk</p>
-    </div>
-    <div>
-        <button class="btn btn-success" onclick="window.print()">
-            <i class="bi bi-printer me-2"></i>
-            Cetak Laporan
-        </button>
-    </div>
+<!-- Page Title -->
+<div class="mb-4">
+    <h4 class="fw-bold">Laporan Stok</h4>
 </div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="laporanTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.overview') }}">Laporan Overview</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="stok-tab" data-bs-toggle="tab" data-bs-target="#stok" type="button" role="tab">
+            Laporan Stok
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('laporan.kurir') }}">Performa Kurir</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="laporanTabsContent">
+    <div class="tab-pane fade show active" id="stok" role="tabpanel">
 
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
@@ -208,6 +217,9 @@
     </p>
 </div>
 @endif
+
+    </div>
+</div>
 
 @endsection
 

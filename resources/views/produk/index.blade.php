@@ -4,22 +4,37 @@
 @section('page-title', 'Data Produk')
 
 @section('content')
-<!-- Header Section -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="mb-1">
-            <i class="bi bi-box-seam text-primary me-2"></i>
-            Manajemen Produk
-        </h4>
-        <p class="text-muted mb-0">Kelola data produk gas elpiji dan air galon</p>
-    </div>
-    <div>
-        <a href="{{ route('produk.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-2"></i>
-            Tambah Produk
-        </a>
-    </div>
+<!-- Page Title -->
+<div class="mb-4">
+    <h4 class="fw-bold">Kelola Data</h4>
 </div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="kelolaDataTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="produk-tab" data-bs-toggle="tab" data-bs-target="#produk" type="button" role="tab">
+            <i class="bi bi-box-seam me-2"></i>
+            Produk Hydragas
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="{{ route('kurir.index') }}">
+            <i class="bi bi-person-badge me-2"></i>
+            Kurir Hydragas
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content" id="kelolaDataTabsContent">
+    <div class="tab-pane fade show active" id="produk" role="tabpanel">
+        <!-- Header Actions -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{{ route('produk.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>
+                Tambah
+            </a>
+            <div></div>
+        </div>
 
 <!-- Filter Section -->
 <div class="card border-0 shadow-sm mb-3">
@@ -181,6 +196,9 @@
             </a>
         </div>
         @endif
+    </div>
+</div>
+
     </div>
 </div>
 

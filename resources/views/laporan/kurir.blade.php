@@ -58,13 +58,14 @@
                 <thead class="bg-light">
                     <tr>
                         <th class="ps-4" width="5%">Rank</th>
-                        <th width="25%">Nama Kurir</th>
-                        <th width="15%">No. Telepon</th>
-                        <th class="text-center" width="10%">Total Pesanan</th>
-                        <th class="text-center" width="10%">Diproses</th>
-                        <th class="text-center" width="10%">Dikirim</th>
-                        <th class="text-center" width="10%">Selesai</th>
-                        <th class="text-end pe-4" width="15%">Nilai Pesanan</th>
+                        <th width="20%">Nama Kurir</th>
+                        <th width="12%">No. Telepon</th>
+                        <th class="text-center" width="8%">Total Pesanan</th>
+                        <th class="text-center" width="8%">Diproses</th>
+                        <th class="text-center" width="8%">Dikirim</th>
+                        <th class="text-center" width="8%">Selesai</th>
+                        <th class="text-center" width="8%">Bukti Upload</th>
+                        <th class="text-end pe-4" width="13%">Nilai Pesanan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,6 +106,20 @@
                         </td>
                         <td class="text-center">
                             <span class="badge bg-success fs-6">{{ $k['pesanan_selesai'] }}</span>
+                        </td>
+                        <td class="text-center">
+                            @php
+                                $buktiCount = $k['pesanan_dengan_bukti'] ?? 0;
+                                $selesaiCount = (int)$k['pesanan_selesai'];
+                                $percentage = $selesaiCount > 0 ? round(($buktiCount / $selesaiCount) * 100) : 0;
+                            @endphp
+                            <div class="d-flex flex-column align-items-center">
+                                <span class="badge bg-success-subtle text-success">
+                                    <i class="bi bi-camera-fill me-1"></i>
+                                    {{ $buktiCount }}
+                                </span>
+                                <small class="text-muted mt-1">{{ $percentage }}%</small>
+                            </div>
                         </td>
                         <td class="text-end pe-4">
                             <strong class="text-success">
@@ -161,6 +176,17 @@
                                 @endphp
                             </strong>
                         </td>
+                        <td class="text-center">
+                            <strong>
+                                @php
+                                    $totalBukti = 0;
+                                    foreach($kurir as $k) {
+                                        $totalBukti += (int)($k['pesanan_dengan_bukti'] ?? 0);
+                                    }
+                                    echo $totalBukti;
+                                @endphp
+                            </strong>
+                        </td>
                         <td class="text-end pe-4">
                             <strong class="text-success">
                                 @php
@@ -185,7 +211,7 @@
     </div>
 </div>
 
-<!-- Performance Chart (Optional) -->
+<!-- Performance Chart & Info -->
 @if(isset($kurir) && count($kurir) > 0 && count($kurir) >= 1)
 <div class="row mt-4">
     <div class="col-md-6">
@@ -200,7 +226,7 @@
                 @php
                     $topKurir = array_slice($kurir, 0, 5);
                     $maxSelesai = isset($kurir[0]) && isset($kurir[0]['pesanan_selesai']) ? (int)$kurir[0]['pesanan_selesai'] : 1;
-                    if ($maxSelesai === 0) $maxSelesai = 1; // Prevent division by zero
+                    if ($maxSelesai === 0) $maxSelesai = 1;
                 @endphp
                 
                 @foreach($topKurir as $k)
@@ -254,6 +280,10 @@
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
                         <strong>Selesai:</strong> Pesanan yang berhasil diselesaikan
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-camera text-success me-2"></i>
+                        <strong>Bukti Upload:</strong> Jumlah pesanan dengan bukti foto pengiriman
                     </li>
                     <li>
                         <i class="bi bi-check-circle text-primary me-2"></i>

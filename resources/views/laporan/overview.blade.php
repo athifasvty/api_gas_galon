@@ -99,7 +99,7 @@
 
 <!-- Statistics Cards Row 2 -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <div class="card-body text-white">
                 <div class="d-flex align-items-center">
@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
             <div class="card-body text-white">
                 <div class="d-flex align-items-center">
@@ -131,7 +131,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
             <div class="card-body text-white">
                 <div class="d-flex align-items-center">
@@ -141,6 +141,23 @@
                     <div class="flex-grow-1">
                         <h6 class="mb-1 opacity-75">Total Produk</h6>
                         <h2 class="mb-0">{{ $data['total_produk'] ?? 0 }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="card-body text-white">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-camera-fill fs-1"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 opacity-75">Bukti Upload</h6>
+                        <h2 class="mb-0">{{ $data['total_bukti_pengiriman'] ?? 0 }}</h2>
+                        <small class="opacity-75">Hari ini</small>
                     </div>
                 </div>
             </div>

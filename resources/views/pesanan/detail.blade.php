@@ -93,6 +93,78 @@
             </div>
         </div>
 
+        <!-- Bukti Pengiriman (BARU!) -->
+        @if(!empty($pesanan['bukti_pengiriman']))
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-success text-white py-3">
+                <h6 class="mb-0">
+                    <i class="bi bi-camera me-2"></i>
+                    Bukti Pengiriman
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="bukti-image-container position-relative">
+                            <img src="http://192.168.203.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                                 class="img-fluid rounded shadow-sm" 
+                                 alt="Bukti Pengiriman"
+                                 style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#buktiModal">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <button class="btn btn-sm btn-light rounded-circle" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#buktiModal"
+                                        title="Lihat Fullscreen">
+                                    <i class="bi bi-arrows-fullscreen"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-success mb-3">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <strong>Bukti Tersedia</strong>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small text-muted">Waktu Upload</label>
+                            <div>
+                                <i class="bi bi-clock me-1"></i>
+                                <strong>{{ date('d M Y, H:i', strtotime($pesanan['waktu_upload_bukti'])) }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small text-muted">Diupload Oleh</label>
+                            <div>
+                                <i class="bi bi-person-badge me-1"></i>
+                                <strong>{{ $pesanan['nama_kurir'] ?? 'Kurir' }}</strong>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="http://192.168.203.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                               class="btn btn-sm btn-outline-success" 
+                               download>
+                                <i class="bi bi-download me-2"></i>
+                                Download Bukti
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @elseif($pesanan['status'] == 'selesai')
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Bukti Pengiriman Tidak Tersedia</strong>
+                    <p class="mb-0 small">Pesanan selesai tanpa bukti foto pengiriman.</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- Customer Info -->
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-white py-3">
@@ -362,6 +434,38 @@
     </div>
 </div>
 
+<!-- Bukti Modal (Fullscreen) -->
+@if(!empty($pesanan['bukti_pengiriman']))
+<div class="modal fade" id="buktiModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="bi bi-camera me-2"></i>
+                    Bukti Pengiriman - Pesanan #{{ $pesanan['id'] }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img src="{{ asset('uploads/bukti_pengiriman/' . $pesanan['bukti_pengiriman']) }}" 
+                     class="img-fluid" 
+                     alt="Bukti Pengiriman"
+                     style="max-height: 80vh; width: auto;">
+            </div>
+            <div class="modal-footer border-0">
+                <a href="{{ asset('uploads/bukti_pengiriman/' . $pesanan['bukti_pengiriman']) }}" 
+                   class="btn btn-success" 
+                   download>
+                    <i class="bi bi-download me-2"></i>
+                    Download
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -407,6 +511,12 @@
     
     .avatar-circle {
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .bukti-image-container img:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+        transition: all 0.3s ease;
     }
 </style>
 @endpush

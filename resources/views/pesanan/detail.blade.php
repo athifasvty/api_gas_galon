@@ -93,7 +93,99 @@
             </div>
         </div>
 
-        <!-- Bukti Pengiriman (BARU!) -->
+        <!-- Bukti Pembayaran QRIS -->
+        @if(!empty($pesanan['bukti_pembayaran']))
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-info text-white py-3">
+                <h6 class="mb-0">
+                    <i class="bi bi-qr-code me-2"></i>
+                    Bukti Pembayaran QRIS
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="bukti-image-container position-relative">
+                            <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                                 class="img-fluid rounded shadow-sm" 
+                                 alt="Bukti Pembayaran"
+                                 style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#buktiPembayaranModal">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <button class="btn btn-sm btn-light rounded-circle" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#buktiPembayaranModal"
+                                        title="Lihat Fullscreen">
+                                    <i class="bi bi-arrows-fullscreen"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-info mb-3">
+                            <i class="bi bi-qr-code me-2"></i>
+                            <strong>Pembayaran via QRIS</strong>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small text-muted">Metode Pembayaran</label>
+                            <div>
+                                <i class="bi bi-wallet2 me-1"></i>
+                                <strong class="text-uppercase">{{ $pesanan['metode_bayar'] ?? 'QRIS' }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small text-muted">Status Pembayaran</label>
+                            <div>
+                                @if($pesanan['status_bayar'] == 'sudah_bayar')
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Sudah Dibayar
+                                </span>
+                                @else
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Menunggu Verifikasi
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                               class="btn btn-sm btn-outline-info" 
+                               download>
+                                <i class="bi bi-download me-2"></i>
+                                Download Bukti
+                            </a>
+                        </div>
+                        
+                        <!-- Info Payment Status -->
+                        @if($pesanan['status_bayar'] != 'sudah_bayar')
+                        <div class="mt-3">
+                            <div class="alert alert-info small mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <strong>Menunggu Verifikasi</strong>
+                                <p class="mb-0 mt-1">Silakan cek bukti pembayaran di atas sebelum melanjutkan pesanan.</p>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @elseif($pesanan['metode_bayar'] == 'qris')
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Bukti Pembayaran Belum Diupload</strong>
+                    <p class="mb-0 small">Customer belum mengupload bukti pembayaran QRIS.</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Bukti Pengiriman -->
         @if(!empty($pesanan['bukti_pengiriman']))
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-success text-white py-3">
@@ -106,16 +198,16 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="bukti-image-container position-relative">
-                            <img src="http://192.168.43.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                            <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                                  class="img-fluid rounded shadow-sm" 
                                  alt="Bukti Pengiriman"
                                  style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
                                  data-bs-toggle="modal" 
-                                 data-bs-target="#buktiModal">
+                                 data-bs-target="#buktiPengirimanModal">
                             <div class="position-absolute top-0 end-0 m-2">
                                 <button class="btn btn-sm btn-light rounded-circle" 
                                         data-bs-toggle="modal" 
-                                        data-bs-target="#buktiModal"
+                                        data-bs-target="#buktiPengirimanModal"
                                         title="Lihat Fullscreen">
                                     <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
@@ -142,7 +234,7 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <a href="http://192.168.43.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                            <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                                class="btn btn-sm btn-outline-success" 
                                download>
                                 <i class="bi bi-download me-2"></i>
@@ -164,133 +256,6 @@
             </div>
         </div>
         @endif
-
-
-<!-- Bukti Pembayaran QRIS (BARU!) -->
-@if(!empty($pesanan['bukti_pembayaran']))
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-header bg-info text-white py-3">
-        <h6 class="mb-0">
-            <i class="bi bi-qr-code me-2"></i>
-            Bukti Pembayaran QRIS
-        </h6>
-    </div>
-    <div class="card-body">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="bukti-image-container position-relative">
-                    <img src="http://192.168.43.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
-                         class="img-fluid rounded shadow-sm" 
-                         alt="Bukti Pembayaran"
-                         style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
-                         data-bs-toggle="modal" 
-                         data-bs-target="#buktiPembayaranModal">
-                    <div class="position-absolute top-0 end-0 m-2">
-                        <button class="btn btn-sm btn-light rounded-circle" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#buktiPembayaranModal"
-                                title="Lihat Fullscreen">
-                            <i class="bi bi-arrows-fullscreen"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="alert alert-info mb-3">
-                    <i class="bi bi-qr-code me-2"></i>
-                    <strong>Pembayaran via QRIS</strong>
-                </div>
-                <div class="mb-2">
-                    <label class="small text-muted">Metode Pembayaran</label>
-                    <div>
-                        <i class="bi bi-wallet2 me-1"></i>
-                        <strong class="text-uppercase">{{ $pesanan['metode_bayar'] ?? 'QRIS' }}</strong>
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <label class="small text-muted">Status Pembayaran</label>
-                    <div>
-                        @if($pesanan['status_bayar'] == 'sudah_bayar')
-                        <span class="badge bg-success">
-                            <i class="bi bi-check-circle me-1"></i>
-                            Sudah Dibayar
-                        </span>
-                        @else
-                        <span class="badge bg-warning text-dark">
-                            <i class="bi bi-clock me-1"></i>
-                            Menunggu Verifikasi
-                        </span>
-                        @endif
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <a href="http://192.168.43.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
-                       class="btn btn-sm btn-outline-info" 
-                       download>
-                        <i class="bi bi-download me-2"></i>
-                        Download Bukti
-                    </a>
-                </div>
-                
-                <!-- Verifikasi Payment (Jika belum dibayar) -->
-                @if($pesanan['status_bayar'] != 'sudah_bayar')
-                <div class="mt-3">
-                    <form action="{{ route('pesanan.verify-payment', $pesanan['id']) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-success w-100">
-                            <i class="bi bi-check-circle me-2"></i>
-                            Verifikasi Pembayaran
-                        </button>
-                    </form>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-@elseif($pesanan['metode_bayar'] == 'qris')
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-body">
-        <div class="alert alert-warning mb-0">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong>Bukti Pembayaran Belum Diupload</strong>
-            <p class="mb-0 small">Customer belum mengupload bukti pembayaran QRIS.</p>
-        </div>
-    </div>
-</div>
-@endif
-
-<!-- Modal Bukti Pembayaran (Fullscreen) -->
-@if(!empty($pesanan['bukti_pembayaran']))
-<div class="modal fade" id="buktiPembayaranModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">
-                    <i class="bi bi-qr-code me-2"></i>
-                    Bukti Pembayaran QRIS - Pesanan #{{ $pesanan['id'] }}
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center p-0">
-                <img src="http://192.168.43.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
-                     class="img-fluid" 
-                     alt="Bukti Pembayaran"
-                     style="max-height: 80vh; width: auto;">
-            </div>
-            <div class="modal-footer border-0">
-                <a href="http://192.168.43.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
-                   class="btn btn-info" 
-                   download>
-                    <i class="bi bi-download me-2"></i>
-                    Download
-                </a>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
         <!-- Customer Info -->
         <div class="card border-0 shadow-sm mb-3">
@@ -531,7 +496,23 @@
                 <div class="mb-2">
                     <label class="small text-muted">Metode Pembayaran</label>
                     <div>
-                        <strong>{{ ucfirst($pesanan['metode_bayar'] ?? 'Cash') }}</strong>
+                        @if(!empty($pesanan['metode_bayar']))
+                            @if($pesanan['metode_bayar'] == 'qris')
+                                <strong class="text-info">
+                                    <i class="bi bi-qr-code me-1"></i>
+                                    QRIS
+                                </strong>
+                            @elseif($pesanan['metode_bayar'] == 'cash')
+                                <strong class="text-success">
+                                    <i class="bi bi-cash me-1"></i>
+                                    Cash
+                                </strong>
+                            @else
+                                <strong>{{ strtoupper($pesanan['metode_bayar']) }}</strong>
+                            @endif
+                        @else
+                            <strong class="text-muted">-</strong>
+                        @endif
                     </div>
                 </div>
                 <div class="mb-2">
@@ -561,9 +542,41 @@
     </div>
 </div>
 
-<!-- Bukti Modal (Fullscreen) -->
+<!-- Modal Bukti Pembayaran (Fullscreen) -->
+@if(!empty($pesanan['bukti_pembayaran']))
+<div class="modal fade" id="buktiPembayaranModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="bi bi-qr-code me-2"></i>
+                    Bukti Pembayaran QRIS - Pesanan #{{ $pesanan['id'] }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                     class="img-fluid" 
+                     alt="Bukti Pembayaran"
+                     style="max-height: 80vh; width: auto;">
+            </div>
+            <div class="modal-footer border-0">
+                <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                   class="btn btn-info" 
+                   download>
+                    <i class="bi bi-download me-2"></i>
+                    Download
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Modal Bukti Pengiriman (Fullscreen) -->
 @if(!empty($pesanan['bukti_pengiriman']))
-<div class="modal fade" id="buktiModal" tabindex="-1">
+<div class="modal fade" id="buktiPengirimanModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0">
@@ -574,13 +587,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center p-0">
-                <img src="{{ asset('uploads/bukti_pengiriman/' . $pesanan['bukti_pengiriman']) }}" 
+                <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                      class="img-fluid" 
                      alt="Bukti Pengiriman"
                      style="max-height: 80vh; width: auto;">
             </div>
             <div class="modal-footer border-0">
-                <a href="{{ asset('uploads/bukti_pengiriman/' . $pesanan['bukti_pengiriman']) }}" 
+                <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                    class="btn btn-success" 
                    download>
                     <i class="bi bi-download me-2"></i>
@@ -624,7 +637,7 @@
                     </button>
                 </form>
             </div>
-        </div>
+            </div>
     </div>
 </div>
 
@@ -647,3 +660,6 @@
     }
 </style>
 @endpush
+
+
+

@@ -112,13 +112,18 @@ class PesananController extends Controller
 
         $kurir_list = $kurirResponse['data'];
 
-        // Get semua pesanan yang sedang dikirim
-        $pesananResponse = $this->apiService->getPesanan(null, ['status' => 'dikirim']);
-        $pesanan_dikirim = $pesananResponse['success'] ? $pesananResponse['data'] : [];
+        // Get semua pesanan yang sedang diproses atau dikirim
+        $pesananDiprosesResponse = $this->apiService->getPesanan(null, ['status' => 'diproses']);
+        $pesananDikirimResponse = $this->apiService->getPesanan(null, ['status' => 'dikirim']);
+        
+        $pesanan_busy = array_merge(
+            $pesananDiprosesResponse['success'] ? $pesananDiprosesResponse['data'] : [],
+            $pesananDikirimResponse['success'] ? $pesananDikirimResponse['data'] : []
+        );
 
-        // Kumpulkan ID kurir yang sedang mengirim
+        // Kumpulkan ID kurir yang sedang handle pesanan
         $kurir_busy = [];
-        foreach ($pesanan_dikirim as $pesanan) {
+        foreach ($pesanan_busy as $pesanan) {
             if (!empty($pesanan['id_kurir'])) {
                 $kurir_busy[] = $pesanan['id_kurir'];
             }

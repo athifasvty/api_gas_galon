@@ -151,15 +151,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>ORD-001</td>
-                                        <td>Sinuh</td>
-                                        <td>081345789</td>
-                                        <td>Ciracas, Jakarta Timur</td>
-                                        <td>Kurir A</td>
-                                        <td>Rp. 21.000</td>
-                                        <td>28/10/2025</td>
-                                    </tr>
+                                    @if(isset($pesanan_baru) && count($pesanan_baru) > 0)
+                                        @foreach($pesanan_baru as $order)
+                                        <tr>
+                                            <td><a href="{{ route('pesanan.show', $order['id']) }}">#{{ $order['id'] }}</a></td>
+                                            <td>{{ $order['nama_customer'] }}</td>
+                                            <td>{{ $order['phone_customer'] }}</td>
+                                            <td>{{ $order['alamat_customer'] ?? '-' }}</td>
+                                            <td>{{ $order['nama_kurir'] ?? '-' }}</td>
+                                            <td>Rp {{ number_format($order['total_harga'], 0, ',', '.') }}</td>
+                                            <td>{{ date('d/m/Y', strtotime($order['tanggal_pesan'])) }}</td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="bi bi-inbox fs-1"></i>
+                                                <p class="mb-0 mt-2">Tidak ada pesanan baru</p>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

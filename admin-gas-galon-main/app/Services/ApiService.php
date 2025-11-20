@@ -162,7 +162,7 @@ class ApiService
     // Auth
     public function login($username, $password)
     {
-        return $this->post('/auth/login.php', [
+        return $this->post('/api/auth/login.php', [
             'username' => $username,
             'password' => $password
         ], false);
@@ -170,13 +170,13 @@ class ApiService
 
     public function logout()
     {
-        return $this->post('/auth/logout.php');
+        return $this->post('/api/auth/logout.php');
     }
 
     // Produk
     public function getProduk($id = null)
     {
-        $endpoint = '/admin/produk.php';
+        $endpoint = '/api/admin/produk.php';
         if ($id) {
             return $this->get($endpoint, ['id' => $id]);
         }
@@ -185,23 +185,23 @@ class ApiService
 
     public function createProduk($data)
     {
-        return $this->post('/admin/produk.php', $data);
+        return $this->post('/api/admin/produk.php', $data);
     }
 
     public function updateProduk($data)
     {
-        return $this->put('/admin/produk.php', $data);
+        return $this->put('/api/admin/produk.php', $data);
     }
 
     public function deleteProduk($id)
     {
-        return $this->delete('/admin/produk.php', ['id' => $id]);
+        return $this->delete('/api/admin/produk.php', ['id' => $id]);
     }
 
     // Pesanan
     public function getPesanan($id = null, $filters = [])
     {
-        $endpoint = '/admin/pesanan.php';
+        $endpoint = '/api/admin/pesanan.php';
         if ($id) {
             return $this->get($endpoint, ['id' => $id]);
         }
@@ -210,18 +210,18 @@ class ApiService
 
     public function updatePesanan($data)
     {
-        return $this->put('/admin/pesanan.php', $data);
+        return $this->put('/api/admin/pesanan.php', $data);
     }
 
     public function deletePesanan($id)
     {
-        return $this->delete('/admin/pesanan.php', ['id' => $id]);
+        return $this->delete('/api/admin/pesanan.php', ['id' => $id]);
     }
 
     // Kurir
     public function getKurir($id = null)
     {
-        $endpoint = '/admin/kurir.php';
+        $endpoint = '/api/admin/kurir.php';
         if ($id) {
             return $this->get($endpoint, ['id' => $id]);
         }
@@ -230,22 +230,22 @@ class ApiService
 
     public function createKurir($data)
     {
-        return $this->post('/admin/kurir.php', $data);
+        return $this->post('/api/admin/kurir.php', $data);
     }
 
     public function updateKurir($data)
     {
-        return $this->put('/admin/kurir.php', $data);
+        return $this->put('/api/admin/kurir.php', $data);
     }
 
     public function deleteKurir($id)
     {
-        return $this->delete('/admin/kurir.php', ['id' => $id]);
+        return $this->delete('/api/admin/kurir.php', ['id' => $id]);
     }
 
     // Laporan
     public function getLaporan($type, $params = [])
     {
-        return $this->get('/admin/laporan.php', array_merge(['type' => $type], $params));
+        return $this->get('/api/admin/laporan.php', array_merge(['type' => $type], $params));
     }
 }

@@ -32,6 +32,9 @@ class DashboardController extends Controller
                     'pesanan_pending' => 0,
                     'produk_stok_menipis' => 0,
                     'produk_terlaris' => [],
+                    'pesanan_baru' => [],
+                    'pesanan_proses' => [],
+                    'pesanan_selesai' => [],
                 ]);
             }
 
@@ -46,11 +49,19 @@ class DashboardController extends Controller
                     'pesanan_pending' => 0,
                     'produk_stok_menipis' => 0,
                     'produk_terlaris' => [],
+                    'pesanan_baru' => [],
+                    'pesanan_proses' => [],
+                    'pesanan_selesai' => [],
                 ]);
             }
 
             // Data berhasil diambil
             $data = $response['data'] ?? [];
+
+            // Get pesanan dengan status berbeda
+            $pesanan_baru = $this->apiService->getPesanan(null, ['status' => 'menunggu']);
+            $pesanan_proses = $this->apiService->getPesanan(null, ['status' => 'diproses']);
+            $pesanan_selesai = $this->apiService->getPesanan(null, ['status' => 'selesai']);
 
             return view('dashboard.index', [
                 'pesanan_hari_ini' => $data['pesanan_hari_ini'] ?? 0,
@@ -58,6 +69,9 @@ class DashboardController extends Controller
                 'pesanan_pending' => $data['pesanan_pending'] ?? 0,
                 'produk_stok_menipis' => $data['produk_stok_menipis'] ?? 0,
                 'produk_terlaris' => $data['produk_terlaris'] ?? [],
+                'pesanan_baru' => $pesanan_baru['success'] ? $pesanan_baru['data'] : [],
+                'pesanan_proses' => $pesanan_proses['success'] ? $pesanan_proses['data'] : [],
+                'pesanan_selesai' => $pesanan_selesai['success'] ? $pesanan_selesai['data'] : [],
             ]);
             
         } catch (\Exception $e) {
@@ -69,6 +83,9 @@ class DashboardController extends Controller
                 'pesanan_pending' => 0,
                 'produk_stok_menipis' => 0,
                 'produk_terlaris' => [],
+                'pesanan_baru' => [],
+                'pesanan_proses' => [],
+                'pesanan_selesai' => [],
             ]);
         }
     }

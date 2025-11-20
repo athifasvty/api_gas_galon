@@ -106,7 +106,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="bukti-image-container position-relative">
-                            <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                            <img src="http://10.254.123.239/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
                                  class="img-fluid rounded shadow-sm" 
                                  alt="Bukti Pembayaran"
                                  style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
@@ -151,7 +151,7 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                            <a href="http://10.254.123.239:8080/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
                                class="btn btn-sm btn-outline-info" 
                                download>
                                 <i class="bi bi-download me-2"></i>
@@ -198,7 +198,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <div class="bukti-image-container position-relative">
-                            <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                            <img src="http://10.254.123.239:8080/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                                  class="img-fluid rounded shadow-sm" 
                                  alt="Bukti Pengiriman"
                                  style="max-height: 300px; width: 100%; object-fit: cover; cursor: pointer;"
@@ -234,7 +234,7 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                            <a href="http://10.254.123.239:8080/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                                class="btn btn-sm btn-outline-success" 
                                download>
                                 <i class="bi bi-download me-2"></i>
@@ -366,25 +366,31 @@
             <div class="card-body">
                 <p class="small text-muted mb-3">
                     <i class="bi bi-info-circle me-1"></i>
-                    Pilih kurir untuk mengirim pesanan ini
+                    Pilih kurir untuk mengirim pesanan ini 
                 </p>
                 <form action="{{ route('pesanan.assign-kurir', $pesanan['id']) }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">Pilih Kurir <span class="text-danger">*</span></label>
-                        <select name="id_kurir" class="form-select" required>
-                            <option value="">-- Pilih Kurir --</option>
+                        <label class="form-label">Pilih Kurir</label>
+                        <select name="id_kurir" class="form-select">
+                            <option value="">-- Pilih Kurir (Opsional) --</option>
                             @foreach($kurir_list as $k)
                             <option value="{{ $k['id'] }}">
                                 {{ $k['name'] }} - {{ $k['phone'] ?? 'No phone' }}
                             </option>
                             @endforeach
                         </select>
+                        <small class="text-muted d-block mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Kosongkan untuk auto-assign kurir yang tersedia
+                        </small>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Assign Kurir
-                    </button>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Assign Kurir
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -555,13 +561,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center p-0">
-                <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                <img src="http://10.254.123.239/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
                      class="img-fluid" 
                      alt="Bukti Pembayaran"
                      style="max-height: 80vh; width: auto;">
             </div>
             <div class="modal-footer border-0">
-                <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
+                <a href="http://10.254.123.239/uploads/bukti_pembayaran/{{ $pesanan['bukti_pembayaran'] }}" 
                    class="btn btn-info" 
                    download>
                     <i class="bi bi-download me-2"></i>
@@ -587,13 +593,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center p-0">
-                <img src="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                <img src="http://10.254.123.239/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                      class="img-fluid" 
                      alt="Bukti Pengiriman"
                      style="max-height: 80vh; width: auto;">
             </div>
             <div class="modal-footer border-0">
-                <a href="http://192.168.186.206/api_gas_galon/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
+                <a href="http://10.254.123.239/uploads/bukti_pengiriman/{{ $pesanan['bukti_pengiriman'] }}" 
                    class="btn btn-success" 
                    download>
                     <i class="bi bi-download me-2"></i>

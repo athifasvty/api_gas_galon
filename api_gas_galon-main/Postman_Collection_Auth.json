@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost/api_gas_galon/api",
+      "value": "http://10.254.123.239",
       "type": "string"
     },
     {
